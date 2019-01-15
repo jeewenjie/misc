@@ -1,2 +1,2 @@
 # misc
-Misc. codes. Work in progress. Etc. 
+Miscellaneous codes. Work in progress. Etc. 
