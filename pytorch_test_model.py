@@ -96,9 +96,10 @@ no_classes =8
 batch_size = 32
 # Load model
 net = MyModel(nb_conv,nb_pool,no_classes)#######################################
+net = net.cuda()
 net = net.double()
 
-net.load_state_dict(torch.load('pytorch_model.ckpt',map_location ='cpu')) # Remove map_location argument on gpu machine
+net.load_state_dict(torch.load('pytorch_model.ckpt')) #,map_location ='cpu')) # Remove map_location argument on gpu machine
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 #summary(net, input_size=(1, 128, 400))
 
@@ -131,7 +132,8 @@ with torch.no_grad():
     correct = 0
     total = 0 
     for i, (inputs, labels) in enumerate(test_dataloader):
-            
+        inputs = inputs.cuda() #GPU 
+        labels = labels.cuda() #GPU
         inputs = inputs.to(device)
         labels = labels.to(device)
             
@@ -142,7 +144,6 @@ with torch.no_grad():
         _, preds = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (preds == labels).sum().item()
-        preds = preds.numpy()
         prediction_array = np.concatenate((prediction_array,preds),axis=None)
         
     print('Test Accuracy of the model: {} %'.format((correct / total) * 100))
